@@ -1,0 +1,449 @@
+  <!doctype html>
+  <html lang="pt-Br">
+  <head>
+    <meta charset="utf-8">
+    <title>Memoteca</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="cabeçalho.css">
+  </head>
+  <body>
+      <header class="header">
+          <div class="logo">
+            <img src="assets/imagens/goiaba-vermelha.png" alt="Isso é uma goiaba" class="logo-goiaba">
+            Goiaba
+          </div>
+          <div class="header-content">
+                <div class="busca-container">
+                  <input type="text" id="barraBusca" placeholder="Buscar frutas..." oninput="filtrarFrutas()">
+                </div>
+            </div>
+        <nav class="nav">    
+              <a href="#"></a>
+              <a href="#" id="menuPrincipal">Sobre</a>
+              <a href="#" onclick="alternarFormulario()">Cadastro</a>
+              <a href="#" id="mostrarFrutas">Frutas cadastradas</a>
+        </nav>
+      </header>
+    <section id="conteudoPrincipal" style="display: none; padding: 20px;">
+      <div class="card-explicativo">
+        <h2>🌍 Sobre o Site</h2>
+        <p><strong>Bem-vindo ao projeto experimental "Goiaba"!</strong></p>
+        <p>Nosso site foi criado com o propósito de catalogar o maior número possível de <strong>frutas conhecidas mundialmente</strong>. Além de registrar o nome e a imagem de cada fruta, o site também destaca informações únicas como <strong>descrições detalhadas</strong> e <strong>curiosidades fascinantes</strong>.</p>
+
+        <h3>🍓 Funcionalidades principais:</h3>
+        <ul>
+          <li>📌 <strong>Cadastro de frutas:</strong> insira o nome, descrição, curiosidade e uma imagem.</li>
+          <li>🔍 <strong>Busca inteligente:</strong> encontre frutas cadastradas por nome.</li>
+          <li>🗃️ <strong>Listagem visual:</strong> visualize as frutas registradas em cartões organizados.</li>
+          <li>✏️ <strong>Edição e exclusão:</strong> mantenha os dados sempre atualizados.</li>
+          <li>🗒️ <strong>Área de lembretes:</strong> anote ideias ou frutas que ainda deseja adicionar.</li>
+        </ul>
+
+        <p>Este projeto é voltado para <strong>curiosos, pesquisadores, estudantes e entusiastas da natureza</strong> que desejam conhecer e compartilhar mais sobre a diversidade frutífera ao redor do planeta.</p>
+        <p><strong>Ajude-nos a expandir este acervo de sabores, histórias e biodiversidade!</strong></p>
+      </div>
+
+      <div class="card-explicativo">
+      <h2>🚀 Bastidores do Projeto</h2>
+      <p><strong>Goiaba</strong> é um projeto experimental criado com o propósito de unir tecnologia, educação e biodiversidade em uma única plataforma digital.</p>
+      
+      <p>Idealizado por entusiastas da natureza e da programação, o site foi desenvolvido com foco em simplicidade e funcionalidade, oferecendo uma experiência leve e educativa para os usuários.</p>
+
+      <h3>🔧 Tecnologias Utilizadas:</h3>
+      <ul>
+        <li><strong>HTML</strong> – estrutura da página e semântica web;</li>
+        <li><strong>CSS</strong> – estilização visual e responsividade;</li>
+        <li><strong>JavaScript</strong> – interatividade, navegação e manipulação dos dados;</li>
+        <li><strong>IndexedDB & localStorage</strong> – armazenamento local de frutas, imagens e descrições diretamente no navegador;</li>
+        <li><strong>Base64</strong> – codificação de imagens para exibição sem servidores externos.</li>
+      </ul>
+
+      <h3>🎯 Objetivo Educacional:</h3>
+      <p>Este projeto foi pensado como uma ferramenta didática para estudantes, curiosos e desenvolvedores iniciantes explorarem:</p>
+      <ul>
+        <li>Conceitos de CRUD no front-end;</li>
+        <li>Uso de banco de dados no navegador;</li>
+        <li>Manipulação de arquivos e imagens;</li>
+        <li>Organização de layout e experiência do usuário.</li>
+      </ul>
+
+      <p>Mais do que uma simples enciclopédia de frutas, o <strong>Goiaba</strong> é uma oportunidade de experimentar e aprender. É um laboratório digital onde tecnologia encontra natureza 🍃.</p>
+    </div>
+
+    </section>
+    
+      <main id="formContainer" style="display: none;">
+        <form id="formulario" class="form">
+      
+          <label for="nome">Nome da fruta:</label>
+          <input type="text" id="nome" name="nome" required><br><br>
+      
+          <label for="descricao">Descrição:</label>
+          <textarea id="descricao" name="descricao" required></textarea><br><br>
+      
+          <label for="curiosidade">Curiosidade:</label>
+          <textarea id="curiosidade" name="curiosidade" required></textarea><br><br>
+      
+          <label for="imagem">Imagem da fruta:</label>
+          <input type="file" id="imagem" name="imagem" accept="image/*" required><br><br>
+      
+          <button type="submit">Cadastrar</button>
+      
+        </form>
+      </main>
+      <section id="listaFrutas" style="display: none; padding: 20px;"></section>
+      
+
+   <footer class="footer">
+      <div class="footer-container">
+        <p>© 2025 - Goiaba | Explorando o mundo das frutas 🍍🍓</p>
+        <nav class="footer-nav">
+          <a href="#">Política de Privacidade</a>
+          <a href="#">Termos de Uso</a>
+          <a href="#">Contato</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+
+  <script>
+    function alternarFormulario() {
+        const form = document.getElementById('formContainer');
+
+      if (form.style.display === 'none' || form.style.display === '') {
+        form.style.display = 'block';
+        form.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        form.style.display = 'none';
+      }
+    }
+
+    //formulario 
+    document.getElementById('formulario').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const descricao = document.getElementById('descricao').value;
+      const curiosidade = document.getElementById('curiosidade').value;
+      const imagemInput = document.getElementById('imagem');
+      const imagemArquivo = imagemInput.files[0];
+
+      const reader = new FileReader();
+
+      reader.onload = function () {
+        const imagemBase64 = reader.result;
+
+        const fruta = {
+          nome,
+          descricao,
+          curiosidade,
+          imagem: imagemBase64
+        };
+
+        const cadastros = JSON.parse(localStorage.getItem('frutas')) || [];
+
+        cadastros.push(fruta);
+
+        localStorage.setItem('frutas', JSON.stringify(cadastros));
+
+        alert("Fruta cadastrada com sucesso!");
+
+        document.getElementById('formulario').reset();
+      };
+
+      if (imagemArquivo) {
+        reader.readAsDataURL(imagemArquivo);
+      } else {
+        alert("Selecione uma imagem da fruta.");
+      }
+    });
+
+    //cadastro
+    let db;
+
+  function abrirBanco() {
+    const request = indexedDB.open('FrutasDB', 1);
+
+    request.onupgradeneeded = function(event) {
+      db = event.target.result;
+      if (!db.objectStoreNames.contains('frutas')) {
+        const objectStore = db.createObjectStore('frutas', { keyPath: 'id', autoIncrement: true });
+        objectStore.createIndex('nome', 'nome', { unique: false });
+      }
+    };
+
+    request.onsuccess = function(event) {
+      db = event.target.result;
+      console.log('Banco aberto com sucesso!');
+    };
+
+    request.onerror = function(event) {
+      console.error('Erro ao abrir banco:', event.target.errorCode);
+    };
+  }
+
+  abrirBanco();
+
+  function adicionarFruta(fruta) {
+    const transaction = db.transaction(['frutas'], 'readwrite');
+    const objectStore = transaction.objectStore('frutas');
+    const request = objectStore.add(fruta);
+
+    request.onsuccess = function() {
+      alert('Fruta cadastrada com sucesso!');
+      listarFrutas();
+    };
+
+    request.onerror = function() {
+      alert('Erro ao cadastrar fruta');
+    };
+  }
+
+  function listarFrutas() {
+    const transaction = db.transaction(['frutas'], 'readonly');
+    const objectStore = transaction.objectStore('frutas');
+    const request = objectStore.getAll();
+
+    request.onsuccess = function(event) {
+      const frutas = event.target.result;
+      mostrarFrutasNaTela(frutas);
+    };
+  }
+
+  function mostrarFrutasNaTela(frutas) {
+    const lista = document.getElementById('listaFrutas');
+    lista.innerHTML = '';
+
+    if (frutas.length === 0) {
+      lista.innerHTML = '<p>Nenhuma fruta cadastrada.</p>';
+      return;
+    }
+
+    frutas.forEach(fruta => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.border = '1px solid #ccc';
+      card.style.padding = '1rem';
+      card.style.borderRadius = '8px';
+      card.style.width = '200px';
+      card.style.margin = '0.5rem';
+      card.style.display = 'flex';
+      card.style.flexDirection = 'column';
+      card.style.alignItems = 'center';
+      card.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
+      card.innerHTML = `
+        <img src="${fruta.imagem}" alt="${fruta.nome}" style="width:100%; height:auto; border-radius: 6px;">
+        <h3>${fruta.nome}</h3>
+        <p><strong>Descrição:</strong> ${fruta.descricao}</p>
+        <p><strong>Curiosidade:</strong> ${fruta.curiosidade}</p>
+        <div style="margin-top: 10px;">
+          <button onclick="abrirEdicao(${fruta.id})" style="margin-right: 5px;">Editar</button>
+          <button onclick="excluirFruta(${fruta.id})">Excluir</button>
+        </div>
+      `;
+      lista.appendChild(card);
+    });
+  }
+
+  // Excluir fruta pelo id
+  function excluirFruta(id) {
+    const transaction = db.transaction(['frutas'], 'readwrite');
+    const objectStore = transaction.objectStore('frutas');
+    const request = objectStore.delete(id);
+
+    request.onsuccess = function() {
+      alert('Fruta excluída!');
+      listarFrutas();
+    };
+
+    request.onerror = function() {
+      alert('Erro ao excluir fruta');
+    };
+  }
+
+  // Abrir formulário com dados da fruta para edição
+  function abrirEdicao(id) {
+    const transaction = db.transaction(['frutas'], 'readonly');
+    const objectStore = transaction.objectStore('frutas');
+    const request = objectStore.get(id);
+
+    request.onsuccess = function(event) {
+      const fruta = event.target.result;
+      if (!fruta) {
+        alert('Fruta não encontrada');
+        return;
+      }
+
+
+      const formContainer = document.getElementById('formContainer');
+      formContainer.style.display = 'block';
+
+      document.getElementById('nome').value = fruta.nome;
+      document.getElementById('descricao').value = fruta.descricao;
+      document.getElementById('curiosidade').value = fruta.curiosidade;
+
+      document.getElementById('formulario').setAttribute('data-edit-id', id);
+    };
+
+    request.onerror = function() {
+      alert('Erro ao carregar fruta para edição');
+    };
+  }
+
+
+  function atualizarFruta(frutaAtualizada) {
+    const transaction = db.transaction(['frutas'], 'readwrite');
+    const objectStore = transaction.objectStore('frutas');
+    const request = objectStore.put(frutaAtualizada);
+
+    request.onsuccess = function() {
+      alert('Fruta atualizada com sucesso!');
+      listarFrutas();
+    };
+
+    request.onerror = function() {
+      alert('Erro ao atualizar fruta');
+    };
+  }
+
+  document.getElementById('formulario').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const nome = document.getElementById('nome').value.trim();
+    const descricao = document.getElementById('descricao').value.trim();
+    const curiosidade = document.getElementById('curiosidade').value.trim();
+    const imagemInput = document.getElementById('imagem');
+
+    const editId = this.getAttribute('data-edit-id');
+
+    function salvarFruta(imagemBase64) {
+      if (editId) {
+
+        const frutaAtualizada = {
+          id: Number(editId),
+          nome,
+          descricao,
+          curiosidade,
+          imagem: imagemBase64
+        };
+        atualizarFruta(frutaAtualizada);
+        this.removeAttribute('data-edit-id');
+      } else {
+
+        const frutaNova = {
+          nome,
+          descricao,
+          curiosidade,
+          imagem: imagemBase64
+        };
+        adicionarFruta(frutaNova);
+      }
+      document.getElementById('formulario').reset();
+    }
+
+    if (imagemInput.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        salvarFruta(reader.result);
+      };
+      reader.readAsDataURL(imagemInput.files[0]);
+    } else {
+    
+      if (editId) {
+        const transaction = db.transaction(['frutas'], 'readonly');
+        const objectStore = transaction.objectStore('frutas');
+        const request = objectStore.get(Number(editId));
+
+        request.onsuccess = function(event) {
+          const frutaExistente = event.target.result;
+          if (!frutaExistente) {
+            alert('Fruta não encontrada para atualizar imagem');
+            return;
+          }
+          salvarFruta(frutaExistente.imagem);
+          document.getElementById('formulario').removeAttribute('data-edit-id');
+        };
+
+        request.onerror = function() {
+          alert('Erro ao buscar fruta para manter imagem');
+        };
+      } else {
+        alert('Selecione uma imagem!');
+      }
+    }
+  });
+
+
+  document.getElementById('mostrarFrutas').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    const formContainer = document.getElementById('formContainer');
+    const lista = document.getElementById('listaFrutas');
+
+    if (lista.style.display === 'flex' || lista.style.display === 'block') {
+      lista.style.display = 'none';
+      formContainer.style.display = 'block';
+      return;
+    }
+
+    formContainer.style.display = 'none';
+    lista.style.display = 'flex';
+    lista.style.flexWrap = 'wrap';
+    lista.style.gap = '1rem';
+
+    listarFrutas();
+  });
+
+  function filtrarFrutas() {
+    const termo = document.getElementById('barraBusca').value.toLowerCase();
+    const transaction = db.transaction(['frutas'], 'readonly');
+    const objectStore = transaction.objectStore('frutas');
+    const request = objectStore.getAll();
+
+    request.onsuccess = function(event) {
+      const frutas = event.target.result;
+      const filtradas = frutas.filter(fruta =>
+        fruta.nome.toLowerCase().includes(termo)
+      );
+      mostrarFrutasNaTela(filtradas);
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const botao = document.getElementById('menuPrincipal');
+    const secao = document.getElementById('conteudoPrincipal');
+
+    botao.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      if (secao.style.display === 'none' || secao.style.display === '') {
+        secao.style.display = 'block';
+      } else {
+        secao.style.display = 'none';
+      }
+    });
+  });
+
+  //dados já cadastrados
+  request.onsuccess = function(event) {
+    db = event.target.result;
+    console.log('Banco aberto com sucesso!');
+    
+    // Verificar e inserir frutas padrão
+    const transaction = db.transaction(['frutas'], 'readonly');
+    const objectStore = transaction.objectStore('frutas');
+    const checkRequest = objectStore.getAll();
+
+    checkRequest.onsuccess = function() {
+      if (checkRequest.result.length === 0) {
+        inserirFrutasPadrao();
+      }
+    };
+  };
+
+  </script>
+
+</html>
